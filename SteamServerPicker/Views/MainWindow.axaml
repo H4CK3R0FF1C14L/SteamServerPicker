@@ -1,0 +1,85 @@
+<Window
+    x:Class="SteamServerPicker.Views.MainWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
+    xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:SteamServerPicker.ViewModels"
+    Title="SteamServerPicker"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="vm:MainWindowViewModel"
+    Icon="/Assets/avalonia-logo.ico"
+    mc:Ignorable="d">
+
+	<Design.DataContext>
+		<vm:MainWindowViewModel />
+	</Design.DataContext>
+
+	<Grid RowDefinitions="10*, 1*">
+
+		<DataGrid
+            Grid.Row="0"
+            Margin="20"
+            BorderBrush="Gray"
+            BorderThickness="1"
+            CanUserReorderColumns="True"
+            CanUserResizeColumns="True"
+            CanUserSortColumns="False"
+            ColumnWidth="*"
+            GridLinesVisibility="All"
+            ItemsSource="{Binding Servers}">
+			<DataGrid.Styles>
+				<Style Selector="DataGrid:focus DataGridCell:current /template/ Grid#FocusVisual">
+					<Setter Property="IsVisible" Value="False" />
+				</Style>
+			</DataGrid.Styles>
+			<DataGrid.Columns>
+				<DataGridTextColumn Binding="{Binding Name}" Header="Name" />
+				<DataGridTextColumn Binding="{Binding IP}" Header="IP" />
+				<DataGridTextColumn Binding="{Binding Ports}" Header="Ports" />
+				<DataGridTextColumn Binding="{Binding Ping}" Header="Ping" />
+				<DataGridCheckBoxColumn Binding="{Binding IsEnable}">
+					<DataGridCheckBoxColumn.Header>
+						<TextBlock
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            Text="Is Blocked"
+                            TextAlignment="Center">
+							<i:Interaction.Behaviors>
+								<ia:EventTriggerBehavior EventName="DoubleTapped">
+									<InvokeCommandAction Command="{Binding ToggleAllIsBlockedCommand}" CommandParameter="{Binding}" />
+								</ia:EventTriggerBehavior>
+							</i:Interaction.Behaviors>
+						</TextBlock>
+					</DataGridCheckBoxColumn.Header>
+				</DataGridCheckBoxColumn>
+			</DataGrid.Columns>
+		</DataGrid>
+
+		<UniformGrid
+            Grid.Row="1"
+            Margin="20"
+            Columns="3">
+			<Button
+                HorizontalAlignment="Left"
+                Command="{Binding UpdateServersCommand}"
+                Content="Update Servers List" />
+			<Button
+                HorizontalAlignment="Left"
+                Command="{Binding ClearRulesCommand}"
+                Content="Clear All Rules" />
+			<Button
+                HorizontalAlignment="Left"
+                Command="{Binding PingAllServersCommand}"
+                Content="Ping Servers" />
+		</UniformGrid>
+
+	</Grid>
+
+
+
+
+</Window>
